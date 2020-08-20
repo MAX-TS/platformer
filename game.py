@@ -71,19 +71,26 @@ class Platform():
 def drawWindow():
     win.blit(bg, (0, 0))
 
-    hero.update_position(platforms)
-    hero.draw(win)
+    if game_over:
+        font = pygame.font.SysFont('comicsansms', 72, bold=True)
+        text = font.render("GAME OVER!", 1, (0, 0, 0))
+        place = text.get_rect(center=(250, 250))
+        win.blit(text, place)
+    else:
+        hero.update_position(platforms)
+        hero.draw(win)
 
-    hero2.update_position(platforms)
-    hero2.draw(win)
+        hero2.update_position(platforms)
+        hero2.draw(win)
 
-    for platform in platforms:
-        platform.draw(win)
+        for platform in platforms:
+            platform.draw(win)
 
     pygame.display.update()
 
 
 run = True
+game_over = False
 hero = Hero(50, 424, 10, (0, 0, 255), 1)
 hero2 = Hero(100, 424, 10, (0, 255, 0), 1)
 platforms = [
@@ -113,7 +120,8 @@ while run:
     else:
         hero.stop()
 
-
+    if hero.y > 499 or hero2.y > 499:
+        game_over = True
 
     drawWindow()
 
