@@ -1,6 +1,7 @@
 import pygame
 
-class Platform():
+
+class Platform:
     def __init__(self, x, y, width, height, color):
         self.x = x
         self.y = y
@@ -9,8 +10,8 @@ class Platform():
         self.color = color
 
     def touch(self, x, y):
-        if (self.x <= x <= self.x + self.width
-            and self.y <= y <= self.y + self.height):
+        if self.x <= x <= self.x + self.width and \
+           self.y <= y <= self.y + self.height:
             return self.y
         return None
 

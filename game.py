@@ -27,11 +27,9 @@ def drawWindow():
         place = text.get_rect(center=(250, 300))
         win.blit(text, place)
     else:
-        hero.update_position(platforms)
-        hero.draw(win)
-
-        hero2.update_position(platforms)
-        hero2.draw(win)
+        for hero in heroes:
+            hero.update_position(platforms)
+            hero.draw(win)
 
         for platform in platforms:
             platform.draw(win)
@@ -42,10 +40,32 @@ def drawWindow():
 run = True
 game_over = False
 
-def reset_game():
-    global hero, hero2
-    hero = Hero(50, 424, 10, (0, 0, 255), 1)
-    hero2 = Hero(100, 424, 10, (0, 255, 0), 1)
+
+def create_heroes():
+    return [
+        Hero(
+            x=50, y=424, radius=10,
+            color=(0, 0, 255),
+            key_up=pygame.K_UP,
+            key_left=pygame.K_LEFT,
+            key_right=pygame.K_RIGHT
+        ),
+        Hero(
+            x=100, y=424,radius=10,
+            color=(0, 255, 0),
+            key_up=pygame.K_w,
+            key_left=pygame.K_a,
+            key_right=pygame.K_d
+        ),
+        Hero(
+            x=150, y=424, radius=10,
+            color=(255, 255, 0),
+            key_up=pygame.K_i,
+            key_left=pygame.K_j,
+            key_right=pygame.K_l
+        )
+    ]
+
 
 platforms = [
 
@@ -54,7 +74,7 @@ platforms = [
 
 ]
 
-reset_game()
+heroes = create_heroes()
 
 while run:
     clock.tick(30)
@@ -65,37 +85,16 @@ while run:
 
     keys = pygame.key.get_pressed()
 
-    # control hero
-    if keys[pygame.K_UP]:
-        hero.jump()
-
-    if keys[pygame.K_LEFT]:
-        hero.left()
-    elif keys[pygame.K_RIGHT]:
-        hero.right()
-    else:
-        hero.stop()
-
-    # control hero2
-    if keys[pygame.K_w]:
-        hero2.jump()
-
-    if keys[pygame.K_a]:
-        hero2.left()
-    elif keys[pygame.K_d]:
-        hero2.right()
-    else:
-        hero2.stop()
-
-    if hero.y > 499 or hero2.y > 499:
-        game_over = True
+    for hero in heroes:
+        hero.control(keys)
+        if hero.y > 499:
+            game_over = True
 
     if keys[pygame.K_SPACE] and game_over:
         game_over = False
-        reset_game()
+        heroes = create_heroes()
 
     drawWindow()
-
 
 
 pygame.quit()
